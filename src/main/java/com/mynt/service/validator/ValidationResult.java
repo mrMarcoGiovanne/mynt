@@ -1,14 +1,15 @@
 package com.mynt.service.validator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ValidationResult {
 	
 	private String errorMessage;
 	
-	private List<String> errorMessages;
+	private List<String> errorMessages = new ArrayList<>();
 	
-	private Boolean valid;
+	private Boolean valid = true;
 
 	public String getErrorMessage() {
 		return errorMessage;

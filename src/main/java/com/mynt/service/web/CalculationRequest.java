@@ -1,6 +1,8 @@
 package com.mynt.service.web;
 
-import java.util.Map;
+import java.util.List;
+
+import com.mynt.service.model.Rule;
 
 public class CalculationRequest {
 	
@@ -12,7 +14,7 @@ public class CalculationRequest {
 	
 	private QuantityRequest length;
 	
-	private Map<String, Object> other;
+	private Other other;
 
 	public QuantityRequest getWeight() {
 		return weight;
@@ -46,11 +48,33 @@ public class CalculationRequest {
 		this.length = length;
 	}
 
-	public Map<String, Object> getOther() {
+	public Other getOther() {
 		return other;
 	}
 
-	public void setOther(Map<String, Object> other) {
+	public void setOther(Other other) {
 		this.other = other;
+	}
+	
+	public class Other {
+		private String voucherCode;
+		
+		private List<Rule> rules;
+
+		public String getVoucherCode() {
+			return voucherCode;
+		}
+
+		public void setVoucherCode(String voucherCode) {
+			this.voucherCode = voucherCode;
+		}
+
+		public List<Rule> getRules() {
+			return rules;
+		}
+
+		public void setRules(List<Rule> rules) {
+			this.rules = rules;
+		}
 	}
 }

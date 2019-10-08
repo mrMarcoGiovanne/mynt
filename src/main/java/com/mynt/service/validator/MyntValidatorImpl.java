@@ -2,6 +2,8 @@ package com.mynt.service.validator;
 
 import org.springframework.stereotype.Component;
 
+import com.mynt.service.model.Dimension;
+import com.mynt.service.model.DimensionUnit;
 import com.mynt.service.model.WeightUnit;
 import com.mynt.service.web.CalculationRequest;
 import com.mynt.service.web.QuantityRequest;
@@ -13,6 +15,10 @@ import com.mynt.service.web.QuantityRequest;
  */
 @Component
 public class MyntValidatorImpl implements MyntValidator {
+	
+	private static final String INVALID_UNIT = " is invalid unit.";
+	
+	private static final String IS_NULL = "is null or unit is null.";
 
 	@Override
 	public ValidationResult validateRequest(CalculationRequest request) {
@@ -20,17 +26,29 @@ public class MyntValidatorImpl implements MyntValidator {
 		
 		doCheckWeight(request, result);
 		
-		doCheckDimensionHeight(request, result);
+		doCheckDimension(Dimension.Type.HEIGHT, request.getHeight(), result);
 		
-		doCheckDimensionWidth(request, result);
+		doCheckDimension(Dimension.Type.WIDTH, request.getWidth(), result);
 		
-		doCheckDimensionLength(request, result);
+		doCheckDimension(Dimension.Type.LENGTH, request.getLength(), result);
+		
+		if(result.getErrorMessages().size() > 0) {
+			result.isValid(false);
+		}
 		
 		return result;
 	}
+	
 
 	private void doCheckWeight(CalculationRequest request, ValidationResult result) {
+		
+		if(request.getWeight() == null || request.getWeight().getUnit() == null) {
+			result.getErrorMessages().add("Weight " + IS_NULL);
+			return;
+		}	
+
 		QuantityRequest weight = request.getWeight();
+		
 		boolean isWeightUnitExist = false;
 		for(WeightUnit weightUnit : WeightUnit.values()) {
 			if (weightUnit.name().equalsIgnoreCase(weight.getUnit())) {
@@ -40,53 +58,28 @@ public class MyntValidatorImpl implements MyntValidator {
 		}
 		
 		if(!isWeightUnitExist) {
-			result.getErrorMessages().add("Weight unit = " + weight.getUnit() + " is not yet available.");
+			result.getErrorMessages().add("Weight unit = " + weight.getUnit() + INVALID_UNIT);
 		}
 	}
 	
-	private void doCheckDimensionHeight(CalculationRequest request, ValidationResult result) {
-		QuantityRequest height = request.getHeight();
+	private void doCheckDimension(Dimension.Type type, QuantityRequest request, ValidationResult result) {
+		
+		if(request == null || request.getUnit() == null) {
+			result.getErrorMessages().add(type.name() + " " + IS_NULL);
+			return;
+		}	
+		
 		boolean isHeightUnitExist = false;
-		for(WeightUnit weightUnit : WeightUnit.values()) {
-			if (weightUnit.name().equalsIgnoreCase(height.getUnit())) {
+		for(DimensionUnit dimensionUnit : DimensionUnit.values()) {
+			if (dimensionUnit.name().equalsIgnoreCase(request.getUnit())) {
 				isHeightUnitExist = true;
-			}
-			
+			}			
 		}
 		
 		if(!isHeightUnitExist) {
-			result.getErrorMessages().add("Height unit = " + height.getUnit() + " is not yet available.");
+			result.getErrorMessages().add(type.name() + " unit = " + request.getUnit() + INVALID_UNIT);
 		}
 	}
-	
-	private void doCheckDimensionWidth(CalculationRequest request, ValidationResult result) {
-		QuantityRequest width = request.getWidth();
-		boolean isWidthUnitExist = false;
-		for(WeightUnit weightUnit : WeightUnit.values()) {
-			if (weightUnit.name().equalsIgnoreCase(width.getUnit())) {
-				isWidthUnitExist = true;
-			}
-			
-		}
-		
-		if(!isWidthUnitExist) {
-			result.getErrorMessages().add("Width unit = " + width.getUnit() + " is not yet available.");
-		}
-	}
-	
-	private void doCheckDimensionLength(CalculationRequest request, ValidationResult result) {
-		QuantityRequest lenght = request.getLength();
-		boolean isLengthUnitExist = false;
-		for(WeightUnit weightUnit : WeightUnit.values()) {
-			if (weightUnit.name().equalsIgnoreCase(lenght.getUnit())) {
-				isLengthUnitExist = true;
-			}
-			
-		}
-		
-		if(!isLengthUnitExist) {
-			result.getErrorMessages().add("Lenght unit = " + lenght.getUnit() + " is not yet available.");
-		}
-	}
+
 
 }

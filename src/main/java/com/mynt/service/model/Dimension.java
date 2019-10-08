@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 public class Dimension {
 	
 	public enum Type {
-		HEIGHT, WEIGHT, LENGTH;
+		HEIGHT, WIDTH, LENGTH;
 	}
 	
 	/**

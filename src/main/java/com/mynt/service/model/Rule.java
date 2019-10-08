@@ -11,6 +11,16 @@ public class Rule {
 	private Quantity quantity;
 	
 	private BigDecimal conditionLimit;
+	
+	public Rule() {}
+	
+	public Rule(Integer priority, BigDecimal cost, Quantity quantity, BigDecimal conditionLimit) {
+		super();
+		this.priority = priority;
+		this.cost = cost;
+		this.quantity = quantity;
+		this.conditionLimit = conditionLimit;
+	}
 
 	public Integer getPriority() {
 		return priority;
@@ -34,6 +44,10 @@ public class Rule {
 
 	public void setQuantity(Quantity quantity) {
 		this.quantity = quantity;
+	}
+	
+	public void setQuantity(String quantity) {
+		this.quantity = Quantity.valueOf(quantity.toUpperCase());
 	}
 
 	public BigDecimal getConditionLimit() {
